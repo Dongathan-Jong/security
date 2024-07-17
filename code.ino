@@ -82,4 +82,51 @@ void loop()
         lcd.setCursor(0, 0);
         lcd.print("Alert! Triggered!");
     }
+
+
+    if(digitalRead(pirSensor) == 1)
+    {
+        alarmTriggered = true;
+    }
+
+    alarmTrigger();
+
+    if(firstEntry)
+    {
+        if(digitalRead(rightButton) == 1)
+        {
+            password += 1000;
+            delay(500);
+            currentDigit = "1";
+            firstDigit = true;
+            firstEntry = false;
+        }
+        if(digitalRead(leftButton) == 1)
+        {
+            delay(500);
+            currentDigit = "0";
+            firstDigit = true;
+            firstEntry = false;
+        }
+    }
+
+    if(firstDigit)
+    {
+        if(digitalRead(rightButton) == 1)
+        {
+            password += 100;
+            delay(500);
+            currentDigit = "1";
+            firstDigit = false;
+            secondDigit = true;
+        }
+        if(digitalRead(leftButton) == 1)
+        {
+            delay(500);
+            currentDigit = "0";
+            firstDigit = false;
+            secondDigit = true;
+        }
+    }
+
 }
