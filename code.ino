@@ -41,3 +41,45 @@ void setup()
   
   IrReceiver.begin(irRecieve, true);
 }
+
+void loop()
+{
+    if(IrReceiver.decode()){
+        auto value = IrReceiver.decodedIRData.decodedRawData;
+
+        switch(value)
+        {
+            case 4010852096: // keypad no '1'
+                digitalWrite(led, HIGH);
+                Serial.println("Key 1 pressed");
+                break;
+            case 3994140416: // keypad no '2'
+                digitalWrite(led, HIGH);
+                Serial.println("Key 2 pressed");
+                break;
+            case 3977428736: // keypad no '3'
+                digitalWrite(led, HIGH);
+                Serial.println("Key 3 pressed");
+                break;
+            case 4278238976: // keypad no 'Power'
+                digitalWrite(led, LOW);
+                Serial.println("Power button pressed");
+                break;
+            default:
+                Serial.println("Unknown key");
+                break;
+        }
+        IrReceiver.resume();
+    }
+
+    if(!alarmTriggered)
+    {
+        lcd.setCursor(0, 0);
+        lcd.print("System: Armed");
+    }
+    else
+    {
+        lcd.setCursor(0, 0);
+        lcd.print("Alert! Triggered!");
+    }
+}
