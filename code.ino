@@ -128,5 +128,54 @@ void loop()
             secondDigit = true;
         }
     }
+if(secondDigit)
+{
+    if(digitalRead(rightButton) == 1)
+    {
+        password += 10;
+        delay(500);
+        currentDigit = "1";
+        secondDigit = false;
+        thirdDigit = true;
+    }
+    if(digitalRead(leftButton) == 1)
+    {
+        delay(500);
+        currentDigit = "0";
+        secondDigit = false;
+        thirdDigit = true;
+    }
+}
+
+if(thirdDigit)
+{
+    if(digitalRead(rightButton) == 1)
+    {
+        password += 1;
+        delay(500);
+        currentDigit = "1";
+        thirdDigit = false;
+        firstEntry = true;
+    }
+    if(digitalRead(leftButton) == 1)
+    {
+        delay(500);
+        currentDigit = "0";
+        thirdDigit = false;
+        firstEntry = true;
+    }
+}
+
+if(password == 1101)
+{
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Alarm Disarmed!");
+    delay(2000);
+    lcd.clear();
+    alarmTriggered = false;
+    noTone(buzzer);
+    password = 0;
+}
 
 }
