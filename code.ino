@@ -203,3 +203,41 @@ void loop()
         lcd.clear();
     }
 }
+
+void alarmTrigger()
+{
+    if(alarmTriggered)
+    {
+        digitalWrite(led, HIGH);
+        tone(buzzer, 440, 500);
+        delay(10);
+        digitalWrite(led, LOW);
+        tone(buzzer, 440);
+        delay(10);
+
+        lcd.setCursor(0, 1);
+        lcd.print("Pass: ");
+
+        if(firstEntry)
+        {
+            lcd.setCursor(7, 1);
+            lcd.print(currentDigit);
+        }
+        if(firstDigit)
+        {
+            lcd.setCursor(8, 1);
+            lcd.print(currentDigit);
+        }
+        if(secondDigit)
+        {
+            lcd.setCursor(9, 1);
+            lcd.print(currentDigit);
+        }
+        if(thirdDigit)
+        {
+            lcd.setCursor(10, 1);
+            lcd.print(currentDigit);
+        }
+    }
+}
+
