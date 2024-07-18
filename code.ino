@@ -44,29 +44,27 @@ void setup()
 
 void loop()
 {
-    if(IrReceiver.decode()){
+    if(IrReceiver.decode())
+    {
         auto value = IrReceiver.decodedIRData.decodedRawData;
 
         switch(value)
         {
-            case 4010852096: // keypad no '1'
+            case 4010852096:
                 digitalWrite(led, HIGH);
-                Serial.println("Key 1 pressed");
+                Serial.println(1);
                 break;
-            case 3994140416: // keypad no '2'
+            case 3994140416:
                 digitalWrite(led, HIGH);
-                Serial.println("Key 2 pressed");
+                Serial.println(2);
                 break;
-            case 3977428736: // keypad no '3'
+            case 3977428736:
                 digitalWrite(led, HIGH);
-                Serial.println("Key 3 pressed");
+                Serial.println(3);
                 break;
-            case 4278238976: // keypad no 'Power'
+            case 4278238976:
                 digitalWrite(led, LOW);
-                Serial.println("Power button pressed");
-                break;
-            default:
-                Serial.println("Unknown key");
+                Serial.println("power");
                 break;
         }
         IrReceiver.resume();
@@ -75,14 +73,13 @@ void loop()
     if(!alarmTriggered)
     {
         lcd.setCursor(0, 0);
-        lcd.print("System: Armed");
+        lcd.print("Alarm: Armed");
     }
     else
     {
         lcd.setCursor(0, 0);
-        lcd.print("Alert! Triggered!");
+        lcd.print("Alarm Triggered!!");
     }
-
 
     if(digitalRead(pirSensor) == 1)
     {
@@ -128,54 +125,81 @@ void loop()
             secondDigit = true;
         }
     }
-if(secondDigit)
-{
-    if(digitalRead(rightButton) == 1)
-    {
-        password += 10;
-        delay(500);
-        currentDigit = "1";
-        secondDigit = false;
-        thirdDigit = true;
-    }
-    if(digitalRead(leftButton) == 1)
-    {
-        delay(500);
-        currentDigit = "0";
-        secondDigit = false;
-        thirdDigit = true;
-    }
-}
 
-if(thirdDigit)
-{
-    if(digitalRead(rightButton) == 1)
+    if(secondDigit)
     {
-        password += 1;
-        delay(500);
-        currentDigit = "1";
-        thirdDigit = false;
+        if(digitalRead(rightButton) == 1)
+        {
+            password += 10;
+            delay(500);
+            currentDigit = "1";
+            secondDigit = false;
+            thirdDigit = true;
+        }
+        if(digitalRead(leftButton) == 1)
+        {
+            delay(500);
+            currentDigit = "0";
+            secondDigit = false;
+            thirdDigit = true;
+        }
+    }
+
+    if(thirdDigit)
+    {
+        if(digitalRead(rightButton) == 1)
+        {
+            password += 1;
+            delay(500);
+            currentDigit = "1";
+            thirdDigit = false;
+            firstEntry = true;
+        }
+        if(digitalRead(leftButton) == 1)
+        {
+            delay(500);
+            currentDigit = "0";
+            thirdDigit = false;
+            firstEntry = true;
+        }
+    }
+
+    if(password == 1101)
+    {
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Alarm Disarmed!");
+        delay(2000);
+        lcd.clear();
+        alarmTriggered = false;
+        noTone(buzzer);
+        password = 0;
+    }
+    else if(firstEntry && password > 0)
+    {
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Wrong Password!!");
+        password = 0;
+        delay(2000);
+        currentDigit = " ";
+    }
+
+    if(IrReceiver.decode())
+    {
+        password = 0;
         firstEntry = true;
-    }
-    if(digitalRead(leftButton) == 1)
-    {
-        delay(500);
-        currentDigit = "0";
+        firstDigit = false;
+        secondDigit = false;
         thirdDigit = false;
-        firstEntry = true;
+        alarmTriggered = false;
+        noTone(buzzer);
+        lcd.clear();
+        lcd.setCursor(0, 0);
+        lcd.print("Alarm Disarmed");
+        lcd.setCursor(0, 1);
+        lcd.print("By IR Remote");
+        delay(1000);
+        lcd.clear();
     }
-}
-
-if(password == 1101)
-{
-    lcd.clear();
-    lcd.setCursor(0, 0);
-    lcd.print("Alarm Disarmed!");
-    delay(2000);
-    lcd.clear();
-    alarmTriggered = false;
-    noTone(buzzer);
-    password = 0;
-}
-
 }
